@@ -1,0 +1,129 @@
+{
+  "_comment": "Edit this file to update reward rules. Rates are % cashback unless 'unit' says 'miles'. Verify category details on each issuer's site; issuers change these periodically.",
+  "categories": [
+    { "id": "amazon", "label": "Amazon / Amazon.com" },
+    { "id": "whole-foods", "label": "Whole Foods" },
+    { "id": "groceries", "label": "Groceries (supermarkets)" },
+    { "id": "dining", "label": "Dining / Restaurants" },
+    { "id": "gas", "label": "Gas stations" },
+    { "id": "transit", "label": "Transit / Commuting" },
+    { "id": "drugstores", "label": "Drugstores / Pharmacy" },
+    { "id": "travel", "label": "Travel (flights/hotels/rental)" },
+    { "id": "delta", "label": "Delta flights" },
+    { "id": "apple", "label": "Apple Store / apple.com" },
+    { "id": "apple-pay", "label": "Apple Pay purchases" },
+    { "id": "online-shopping", "label": "Online shopping (general)" },
+    { "id": "rotating", "label": "Discover rotating 5% category" },
+    { "id": "everything-else", "label": "Everything else" }
+  ],
+  "cards": [
+    {
+      "id": "chase-prime",
+      "name": "Chase Amazon Prime Visa",
+      "issuer": "Chase",
+      "color": "#232F3E",
+      "accent": "#FF9900",
+      "unit": "cash",
+      "offersUrl": "https://www.chase.com/personal/credit-cards/chase-offers",
+      "rules": [
+        { "category": "amazon", "rate": 5, "note": "Amazon.com & Amazon Fresh (with Prime)" },
+        { "category": "whole-foods", "rate": 5, "note": "With active Prime membership" },
+        { "category": "travel", "rate": 5, "note": "Booked through Chase Travel" },
+        { "category": "dining", "rate": 2 },
+        { "category": "gas", "rate": 2 },
+        { "category": "transit", "rate": 2, "note": "Local transit & commuting" },
+        { "category": "everything-else", "rate": 1 }
+      ]
+    },
+    {
+      "id": "chase-freedom-unlimited",
+      "name": "Chase Freedom Unlimited",
+      "issuer": "Chase",
+      "color": "#117ACA",
+      "accent": "#00A4E4",
+      "unit": "cash",
+      "offersUrl": "https://www.chase.com/personal/credit-cards/chase-offers",
+      "rules": [
+        { "category": "travel", "rate": 5, "note": "Booked through Chase Travel" },
+        { "category": "dining", "rate": 3 },
+        { "category": "drugstores", "rate": 3 },
+        { "category": "everything-else", "rate": 1.5 }
+      ]
+    },
+    {
+      "id": "discover-it",
+      "name": "Discover it",
+      "issuer": "Discover",
+      "color": "#FF6000",
+      "accent": "#FF6000",
+      "unit": "cash",
+      "offersUrl": "https://www.discover.com/credit-cards/cashback-bonus/redeem-cashback.html",
+      "rules": [
+        { "category": "rotating", "rate": 5, "note": "Activate each quarter, up to $1,500 spend. See calendar below." },
+        { "category": "everything-else", "rate": 1 }
+      ]
+    },
+    {
+      "id": "capitalone-quicksilver",
+      "name": "Capital One Quicksilver",
+      "issuer": "Capital One",
+      "color": "#004977",
+      "accent": "#D03027",
+      "unit": "cash",
+      "offersUrl": "https://www.capitalone.com/credit-cards/capital-one-offers/",
+      "rules": [
+        { "category": "travel", "rate": 5, "note": "Hotels & rental cars via Capital One Travel" },
+        { "category": "everything-else", "rate": 1.5 }
+      ]
+    },
+    {
+      "id": "capitalone-platinum",
+      "name": "Capital One Platinum",
+      "issuer": "Capital One",
+      "color": "#4A4A4A",
+      "accent": "#8E8E8E",
+      "unit": "cash",
+      "offersUrl": "https://www.capitalone.com/credit-cards/capital-one-offers/",
+      "rules": [
+        { "category": "everything-else", "rate": 0, "note": "No rewards — credit-building card" }
+      ]
+    },
+    {
+      "id": "apple-card",
+      "name": "Apple Card",
+      "issuer": "Goldman Sachs",
+      "color": "#1D1D1F",
+      "accent": "#A2AAAD",
+      "unit": "cash",
+      "offersUrl": "https://card.apple.com/",
+      "rules": [
+        { "category": "apple", "rate": 3, "note": "Apple Store, apple.com, App Store & select partners" },
+        { "category": "apple-pay", "rate": 2, "note": "Any purchase with Apple Pay" },
+        { "category": "everything-else", "rate": 1, "note": "Physical titanium card" }
+      ]
+    },
+    {
+      "id": "amex-delta-blue",
+      "name": "Amex Blue Delta SkyMiles",
+      "issuer": "American Express",
+      "color": "#006FCF",
+      "accent": "#C8102E",
+      "unit": "miles",
+      "offersUrl": "https://global.americanexpress.com/offers",
+      "rules": [
+        { "category": "delta", "rate": 2, "note": "2x SkyMiles on Delta purchases" },
+        { "category": "dining", "rate": 2, "note": "2x SkyMiles at restaurants worldwide" },
+        { "category": "everything-else", "rate": 1, "note": "1x SkyMiles" }
+      ]
+    }
+  ],
+  "discoverCalendar": {
+    "_note": "VERIFY at discover.com/credit-cards/cash-back/calendar — issuer sets these each year. Update the arrays below.",
+    "2026": {
+      "Q1": { "months": "Jan–Mar", "categories": ["Grocery stores", "Drugstores"] },
+      "Q2": { "months": "Apr–Jun", "categories": ["Gas stations", "Home improvement"] },
+      "Q3": { "months": "Jul–Sep", "categories": ["Restaurants"] },
+      "Q4": { "months": "Oct–Dec", "categories": ["Amazon.com", "Target", "Walmart"] }
+    }
+  }
+}

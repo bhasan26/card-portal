@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Pick the credit card that earns the most rewards for what you're about to buy." />
+  <title>Card Portal — Which card should I use?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%B3%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar__inner">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">💳</span>
+        <span class="brand__name">Card Portal</span>
+      </div>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+        <span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="wrap main">
+    <section class="hero">
+      <h1 class="hero__title">Which card should I use?</h1>
+      <p class="hero__sub">Choose what you're buying and see which of your cards earns the most.</p>
+
+      <div class="picker">
+        <label class="picker__label" for="categorySelect">I'm about to spend on…</label>
+        <div class="picker__row">
+          <select id="categorySelect" class="picker__select" aria-label="Spending category"></select>
+        </div>
+        <div id="categoryChips" class="chips" role="group" aria-label="Quick categories"></div>
+      </div>
+    </section>
+
+    <section id="results" class="results" aria-live="polite"></section>
+
+    <section id="calendar" class="calendar" hidden></section>
+
+    <section class="all-cards">
+      <h2 class="section-title">All cards in your wallet</h2>
+      <div id="cardGrid" class="card-grid"></div>
+    </section>
+  </main>
+
+  <footer class="footer wrap">
+    <p>Rates come from <code>data/cards.json</code>. Card programs change often — verify details on each issuer's site before relying on them.</p>
+    <p class="footer__meta">Miles and cash-back rates aren't directly comparable; treat miles cards as a separate bucket.</p>
+  </footer>
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>
