@@ -95,6 +95,38 @@ async function main() {
     }
   });
 
+  // Validate optional offers.
+  if (data.offers !== undefined) {
+    if (!Array.isArray(data.offers)) {
+      err("`offers` must be an array when present.");
+    } else {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      data.offers.forEach((offer, i) => {
+        const where = `offers[${i}]`;
+        if (!offer || typeof offer !== "object") {
+          err(`${where} must be an object.`);
+          return;
+        }
+        if (!cardIds.has(offer.card)) {
+          err(`${where} references unknown card "${offer.card}".`);
+        }
+        if (!offer.title) err(`${where} is missing a title.`);
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(offer.expires || ""));
+        if (!m) {
+          err(`${where} has an invalid expires "${offer.expires}" (expected YYYY-MM-DD).`);
+        } else {
+          const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+          if (isNaN(d.getTime())) err(`${where} has an unparseable expires "${offer.expires}".`);
+          else if (d < today) warn(`${where} ("${offer.title}") already expired — it won't show (safe to leave or remove).`);
+        }
+        if (offer.url && !/^https?:\/\//.test(offer.url)) {
+          err(`${where} url must start with http(s):// if present.`);
+        }
+      });
+    }
+  }
+
   // Flag categories no card can earn on (dead options in the dropdown).
   const usedCategories = new Set();
   (data.cards || []).forEach((card) => {

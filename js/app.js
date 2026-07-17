@@ -13,6 +13,9 @@
     els.select = document.getElementById("categorySelect");
     els.chips = document.getElementById("categoryChips");
     els.results = document.getElementById("results");
+    els.offers = document.getElementById("offers");
+    els.offersList = document.getElementById("offersList");
+    els.offersCount = document.getElementById("offersCount");
     els.calendar = document.getElementById("calendar");
     els.grid = document.getElementById("cardGrid");
     els.themeToggle = document.getElementById("themeToggle");
@@ -27,6 +30,7 @@
       .then(function (data) {
         DATA = data;
         buildControls();
+        renderOffers();
         renderWallet();
         renderCalendar();
         // Restore last choice or default to the first category.
@@ -160,12 +164,18 @@
     var body = document.createElement("div");
     body.className = "best-card__body";
     var note = res.matched ? res.note : "Base rate — no special bonus for " + cat.label.toLowerCase() + ".";
+    var cardOffers = offersForCard(card.id);
+    var offerFlag = cardOffers.length
+      ? '<div class="offer-flag">🎯 ' + cardOffers.length +
+        " active offer" + (cardOffers.length > 1 ? "s" : "") + " on this card — see below</div>"
+      : "";
     body.innerHTML =
       '<div class="best-card__rate">' + formatRate(res.rate, card.unit) +
       " <small>on " + escapeHtml(cat.label) + "</small></div>" +
       (note ? '<p class="best-card__note">' + escapeHtml(note) + "</p>" : "") +
+      offerFlag +
       (card.offersUrl
-        ? '<a class="best-card__link" href="' + escapeAttr(card.offersUrl) + '" target="_blank" rel="noopener">View card offers ↗</a>'
+        ? '<br><a class="best-card__link" href="' + escapeAttr(card.offersUrl) + '" target="_blank" rel="noopener">View card offers ↗</a>'
         : "");
 
     wrap.appendChild(head);
@@ -187,6 +197,61 @@
       (card.unit === "miles" ? '<span class="badge-miles">miles</span>' : "") +
       "</div>";
     return row;
+  }
+
+  /* ---------- Offers ---------- */
+
+  // Non-expired offers, soonest-expiring first. Expiry is evaluated at page
+  // load, so lapsed offers vanish on their own without editing the data.
+  function activeOffers() {
+    var offers = Array.isArray(DATA.offers) ? DATA.offers : [];
+    var today = startOfToday();
+    return offers
+      .filter(function (o) {
+        var d = parseDate(o.expires);
+        return d !== null && d >= today;
+      })
+      .sort(function (a, b) {
+        return parseDate(a.expires) - parseDate(b.expires);
+      });
+  }
+
+  function offersForCard(cardId) {
+    return activeOffers().filter(function (o) {
+      return o.card === cardId;
+    });
+  }
+
+  function renderOffers() {
+    var offers = activeOffers();
+    if (!offers.length) {
+      els.offers.hidden = true;
+      return;
+    }
+    els.offersCount.textContent = offers.length;
+    els.offersList.innerHTML = "";
+    offers.forEach(function (o) {
+      var card = cardById(o.card);
+      var days = daysUntil(o.expires);
+      var soon = days <= 7;
+      var el = document.createElement("div");
+      el.className = "offer";
+      el.innerHTML =
+        '<span class="offer__stripe" style="background:' +
+        escapeAttr(card ? card.accent || card.color : "#888") + '"></span>' +
+        '<div class="offer__body">' +
+        '<div class="offer__card">' + escapeHtml(card ? card.name : o.card) + "</div>" +
+        '<div class="offer__title">' + escapeHtml(o.title || "Offer") + "</div>" +
+        (o.detail ? '<p class="offer__detail">' + escapeHtml(o.detail) + "</p>" : "") +
+        '<div class="offer__foot">' +
+        '<span class="offer__countdown' + (soon ? " is-soon" : "") + '">' + countdownLabel(days) + "</span>" +
+        (o.url
+          ? '<a class="offer__link" href="' + escapeAttr(o.url) + '" target="_blank" rel="noopener">Open ↗</a>'
+          : "") +
+        "</div></div>";
+      els.offersList.appendChild(el);
+    });
+    els.offers.hidden = false;
   }
 
   function renderWallet() {
@@ -215,13 +280,18 @@
         })
         .join("");
 
+      var offerCount = offersForCard(card.id).length;
+      var offerBadge = offerCount
+        ? '<span class="wallet-card__offer-badge">🎯 ' + offerCount + " offer" + (offerCount > 1 ? "s" : "") + "</span>"
+        : "";
       el.innerHTML =
         '<div class="wallet-card__top">' +
         '<div><div class="wallet-card__name">' + escapeHtml(card.name) + "</div>" +
         '<div class="wallet-card__issuer">' + escapeHtml(card.issuer) + "</div></div>" +
         '<span class="wallet-card__unit">' + (card.unit === "miles" ? "Miles" : "Cash") + "</span>" +
         "</div>" +
-        '<div class="wallet-card__rules">' + rulesHtml + "</div>";
+        '<div class="wallet-card__rules">' + rulesHtml + "</div>" +
+        offerBadge;
       frag.appendChild(el);
     });
     els.grid.innerHTML = "";
@@ -300,6 +370,34 @@
     return DATA.categories.filter(function (c) {
       return c.id === id;
     })[0];
+  }
+  function cardById(id) {
+    return DATA.cards.filter(function (c) {
+      return c.id === id;
+    })[0];
+  }
+  function startOfToday() {
+    var n = new Date();
+    return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+  }
+  // Parse a YYYY-MM-DD string into a local Date (midnight). Returns null if invalid.
+  function parseDate(s) {
+    if (typeof s !== "string") return null;
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s.trim());
+    if (!m) return null;
+    var d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return isNaN(d.getTime()) ? null : d;
+  }
+  function daysUntil(s) {
+    var d = parseDate(s);
+    if (!d) return 0;
+    return Math.round((d - startOfToday()) / 86400000);
+  }
+  function countdownLabel(days) {
+    if (days <= 0) return "Ends today";
+    if (days === 1) return "1 day left";
+    if (days <= 45) return days + " days left";
+    return "Ends " + new Date(startOfToday().getTime() + days * 86400000).toLocaleDateString(undefined, { month: "short", day: "numeric" });
   }
   function categoryLabel(id) {
     var c = findCategory(id);

@@ -1,0 +1,41 @@
+name: Data freshness check
+
+on:
+  schedule:
+    # Every Monday 13:00 UTC — catches offer expiries and quarter changes.
+    - cron: "0 13 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Check data freshness
+        id: check
+        run: node scripts/check-freshness.mjs
+
+      - name: Open or update reminder issue
+        if: steps.check.outputs.attention == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TITLE: "🔔 Card Portal — data needs updating"
+        run: |
+          set -euo pipefail
+          existing=$(gh issue list --state open --search "$TITLE in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file freshness-report.md
+            echo "Commented on existing issue #$existing"
+          else
+            gh issue create --title "$TITLE" --body-file freshness-report.md --label maintenance || \
+            gh issue create --title "$TITLE" --body-file freshness-report.md
+            echo "Opened a new reminder issue"
+          fi

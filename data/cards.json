@@ -125,5 +125,29 @@
       "Q3": { "months": "Jul–Sep", "categories": ["Gas stations", "Transportation (flights, transit)", "Drugstores"] },
       "Q4": { "months": "Oct–Dec", "categories": ["Not yet announced — check back in Sep"] }
     }
-  }
+  },
+  "_offersComment": "Add targeted/limited-time offers here as you find them in each issuer's app (Amex Offers, Chase Offers, etc.). Each needs a card id, title, and expires (YYYY-MM-DD). Expired offers auto-hide — no need to delete them. The examples below are placeholders; replace with your real offers.",
+  "offers": [
+    {
+      "card": "amex-delta-blue",
+      "title": "Spend $200 at restaurants, get $40 back",
+      "detail": "Add the offer in the Amex app, then pay with the card.",
+      "expires": "2026-08-31",
+      "url": "https://global.americanexpress.com/offers"
+    },
+    {
+      "card": "chase-freedom-unlimited",
+      "title": "5% back at a select grocery store",
+      "detail": "Activate under Chase Offers before you shop.",
+      "expires": "2026-09-30",
+      "url": "https://www.chase.com/personal/credit-cards/chase-offers"
+    },
+    {
+      "card": "chase-prime",
+      "title": "$15 off a $60 Amazon order (expired sample)",
+      "detail": "This one is dated in the past on purpose — it should NOT appear, which proves auto-expiry works.",
+      "expires": "2026-06-01",
+      "url": "https://www.chase.com/personal/credit-cards/chase-offers"
+    }
+  ]
 }
