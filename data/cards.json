@@ -118,12 +118,12 @@
     }
   ],
   "discoverCalendar": {
-    "_note": "VERIFY at discover.com/credit-cards/cash-back/calendar — issuer sets these each year. Update the arrays below.",
+    "_note": "VERIFY at discover.com/credit-cards/cash-back/calendar — issuer sets these each year. Q3 2026 confirmed via public sources (Jul 2026); Q4 not yet announced.",
     "2026": {
       "Q1": { "months": "Jan–Mar", "categories": ["Grocery stores", "Drugstores"] },
       "Q2": { "months": "Apr–Jun", "categories": ["Gas stations", "Home improvement"] },
-      "Q3": { "months": "Jul–Sep", "categories": ["Restaurants"] },
-      "Q4": { "months": "Oct–Dec", "categories": ["Amazon.com", "Target", "Walmart"] }
+      "Q3": { "months": "Jul–Sep", "categories": ["Gas stations", "Transportation (flights, transit)", "Drugstores"] },
+      "Q4": { "months": "Oct–Dec", "categories": ["Not yet announced — check back in Sep"] }
     }
   }
 }
